@@ -10,6 +10,7 @@ import com.project.fitness.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,13 +25,13 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@RequestBody RegisterUser registerUser){
+    public ResponseEntity<UserResponse> register(@Validated @RequestBody RegisterUser registerUser){
         UserResponse userResponse =  userService.register(registerUser);
         return ResponseEntity.ok(userResponse);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponse> login(@Validated @RequestBody LoginRequest loginRequest){
         try {
             User user = userService.authenticate(loginRequest);
             String token = jwtUtils.generateToken(user.getId(), user.getRole().name());
